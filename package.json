@@ -1,0 +1,53 @@
+{
+  "name": "petcare",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www",
+    "dev": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "@formkit/tempo": "^0.0.12",
+    "bcrypt": "^5.1.1",
+    "cloudinary": "^2.0.3",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.45",
+    "mongoose": "^8.1.1",
+    "mongoose-unique-validator": "^5.0.0",
+    "morgan": "~1.9.1",
+    "multer": "^1.4.5-lts.1",
+    "node": "^21.6.2",
+    "nodemailer": "^6.9.7",
+    "nodemon": "^3.0.1",
+    "npm": "^10.4.0",
+    "sharp": "^0.30.7",
+    "socket.io": "^4.7.5",
+    "util": "^0.12.5",
+    "validate-phone-number-node-js": "^0.0.1",
+    "validator": "^13.11.0",
+    "yarn": "^1.22.19"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.33.2",
+    "prettier": "^3.2.4"
+  }
+}
