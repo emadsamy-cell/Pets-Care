@@ -6,8 +6,8 @@ const User = require('../models/User');
 exports.satusUpdate = catchAsync(async (req, res, next) => {
   const newNotification = new Notification({
     title: 'Appointment Status',
-    message: `Appointment status updated to ${req.result.status} 
-    with message from the pety: ${req.result.message}`,
+    message: `Appointment status has been successfully updated to ${req.result.status} 
+    Message from the pety: ${req.result.message}`,
     userId: req.result.owner,
     appointmentId: req.result.id,
   });
