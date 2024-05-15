@@ -117,6 +117,7 @@ exports.changeAppointment = catchAsync(async (req, res) => {
     { $set: { status: newStatus } },
     { new: true },
   );
+  result.message = req.body.message || 'wait for your visit';
   req.result = result;
   await notificationController.satusUpdate(req, res);
   sendWithoutToken(res, result, 200);
