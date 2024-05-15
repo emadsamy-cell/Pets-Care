@@ -15,6 +15,7 @@ const petyRouter = require('./routes/pety');
 const dashboardRouter = require('./routes/dashboard');
 const reviewsRouter = require('./routes/reviews');
 const notificationRouter = require('./routes/notification');
+const historyRouter = require('./routes/History');
 
 const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
@@ -49,6 +50,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/pety', petyRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/notification', notificationRouter);
+app.use('/api/history', historyRouter);
 
 app.use('/api/dashboard', dashboardRouter);
 app.use((req, res, next) => {
