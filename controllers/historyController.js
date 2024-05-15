@@ -27,7 +27,6 @@ class ApiFeatures {
 }
 
 exports.createHistory = catchAsync(async (req, res, next) => {
-  req.body.userId = req.user._id;
   const history = await History.create(req.body);
   res.status(201).json({
     status: 'success',
