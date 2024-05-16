@@ -13,14 +13,14 @@ class ApiFeatures {
     if (this.queryString.AnimalName) {
       const name = new RegExp(this.queryString.AnimalName, 'i');
 
-      this.query = this.query.find({ animalName: name });
+      this.query = this.query.find({ 'animals.animalName': name });
     }
     return this;
   }
   type() {
     if (this.queryString.AnimalType) {
       const type = new RegExp(this.queryString.AnimalType, 'i');
-      this.query = this.query.find({ animalType: type });
+      this.query = this.query.find({ 'animals.animalType': type });
     }
     return this;
   }
@@ -36,14 +36,24 @@ exports.createHistory = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getHistory = catchAsync(async (req, res, next) => {
-  let history = new ApiFeatures(
-    History.find({ userId: req.params.userId }),
-    req.query,
-  )
-    .name()
-    .type();
-  history = await history.query;
+exports.getHistoryForUser = catchAsync(async (req, res, next) => {
+  let history = await History.find({ userId: req.params.userId }).populate({
+    path: 'userId',
+    select: 'firstName photo',
+  });
+  res.status(200).json({
+    status: 'success',
+    results: history.length,
+    data: {
+      history,
+    },
+  });
+});
+
+exports.getHistoryForAppoinment = catchAsync(async (req, res, next) => {
+  let history = await History.find({
+    appoinmentId: req.params.appoinmentId,
+  }).populate({ path: 'userId', select: 'firstName photo' });
 
   res.status(200).json({
     status: 'success',
