@@ -8,5 +8,6 @@ router
   .route('/')
   .patch(notificationController.readNotification)
   .delete(notificationController.deleteNotification);
+router.route('/:id').get(notificationController.getNotificationForOneUser);
 
 module.exports = router;
