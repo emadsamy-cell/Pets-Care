@@ -66,13 +66,25 @@ exports.readNotification = catchAsync(async (req, res, next) => {
     return next(new AppError('Notification not found', 404));
   }
   if (notification.reviewId) {
-    notification = await Notification.findById(
-      req.body.notificationId,
-    ).populate('reviewId');
+    if (notification.userId) {
+      notification = await Notification.findById(req.body.notificationId)
+        .populate('reviewId')
+        .populate('userId');
+    } else {
+      notification = await Notification.findById(req.body.notificationId)
+        .populate('reviewId')
+        .populate('petyId');
+    }
   } else if (notification.appointmentId) {
-    notification = await Notification.findById(
-      req.body.notificationId,
-    ).populate('appointmentId');
+    if (notification.userId) {
+      notification = await Notification.findById(req.body.notificationId)
+        .populate('appointmentId')
+        .populate('userId');
+    } else {
+      notification = await Notification.findById(req.body.notificationId)
+        .populate('appointmentId')
+        .populate('petyId');
+    }
   }
   console.log(notification);
 
@@ -96,5 +108,22 @@ exports.deleteNotification = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'success',
     data: null,
+  });
+});
+
+exports.getNotificationForOneUser = catchAsync(async (req, res, next) => {
+  let notification = await Notification.find({ petyId: req.params.id });
+  if (notification.length <= 0) {
+    notification = await Notification.find({ userId: req.params.id });
+  }
+
+  if (notification.length <= 0) {
+    return next(new AppError("User doesn't have any notification yet", 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    reults: notification.length,
+    data: { notification },
   });
 });
