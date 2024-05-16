@@ -6,5 +6,9 @@ const historyController = require('../controllers/historyController');
 
 router.use(authController.protect);
 router.route('/').post(historyController.createHistory);
-router.route('/:userId').get(historyController.getHistory);
+router.route('/user/:userId').get(historyController.getHistoryForUser);
+router
+  .route('/appoinment/:appoinmentId')
+  .get(historyController.getHistoryForAppoinment);
+
 module.exports = router;

@@ -10,28 +10,36 @@ const History = new historySchema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  animalName: {
-    type: String,
-    required: [true, 'Please provide the name of the animal.'],
+  appoinmentId: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'appoinment',
   },
-  animalType: {
-    type: String,
-    required: [true, 'Please provide the type of the animal.'],
-  },
-  DiagnosisName: {
-    type: String,
-    required: [true, 'Please provide the name of the diagnosis.'],
-  },
-  symptoms: [
+  animals: [
     {
-      type: String,
-      required: [true, 'Please provide the Symptoms.'],
-    },
-  ],
-  medicineName: [
-    {
-      type: String,
-      required: [true, 'Please provide the name of the medicine.'],
+      animalName: {
+        type: String,
+        required: [true, 'Please provide the name of the animal.'],
+      },
+      animalType: {
+        type: String,
+        required: [true, 'Please provide the type of the animal.'],
+      },
+      DiagnosisName: {
+        type: String,
+        required: [true, 'Please provide the name of the diagnosis.'],
+      },
+      symptoms: [
+        {
+          type: String,
+          required: [true, 'Please provide the Symptoms.'],
+        },
+      ],
+      medicineName: [
+        {
+          type: String,
+          required: [true, 'Please provide the name of the medicine.'],
+        },
+      ],
     },
   ],
 });
