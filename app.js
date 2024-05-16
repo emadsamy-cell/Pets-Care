@@ -15,6 +15,9 @@ const petyRouter = require('./routes/pety');
 const dashboardRouter = require('./routes/dashboard');
 const reviewsRouter = require('./routes/reviews');
 const notificationRouter = require('./routes/notification');
+const postsRouter = require('./routes/post');
+const commentsRouter = require('./routes/comment');
+const tagsRouter = require('./routes/tag');
 
 const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
@@ -49,8 +52,11 @@ app.use('/api/users', usersRouter);
 app.use('/api/pety', petyRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/notification', notificationRouter);
-
 app.use('/api/dashboard', dashboardRouter);
+app.use('/api/posts', postsRouter);
+app.use('/api/comments', commentsRouter);
+app.use('/api/tags', tagsRouter);
+
 app.use((req, res, next) => {
   return next(
     new AppError(`Can't find this ${req.originalUrl} On this server!`, 404),
