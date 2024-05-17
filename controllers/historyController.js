@@ -63,3 +63,18 @@ exports.getHistoryForAppoinment = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getHistoryForAuthenticatedUser = catchAsync(async (req, res, next) => {
+  let history = await History.find({ userId: req.user.id }).populate({
+    path: 'petyId',
+    select: 'petyName role photo',
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: history.length,
+    data: {
+      history,
+    },
+  });
+});

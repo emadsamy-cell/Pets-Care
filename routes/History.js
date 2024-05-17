@@ -5,7 +5,10 @@ const authController = require('../controllers/authController');
 const historyController = require('../controllers/historyController');
 
 router.use(authController.protect);
-router.route('/').post(historyController.createHistory);
+router
+  .route('/')
+  .post(historyController.createHistory)
+  .get(historyController.getHistoryForAuthenticatedUser);
 router.route('/user/:userId').get(historyController.getHistoryForUser);
 router
   .route('/appoinment/:appoinmentId')
