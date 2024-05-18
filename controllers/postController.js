@@ -94,6 +94,52 @@ exports.pages = catchAsync(async (req, res) => {
   sendWithoutToken(res, pages, 200);
 });
 
+exports.myPosts = catchAsync(async (req, res) => {
+  const features = new ApiFeatures(Post.find({ user: req.user.id }), req.query)
+    .tag()
+    .top()
+    .sort()
+    .paginate();
+
+  const myPosts = await features.query.populate({
+    path: 'user',
+    select: '_id photo firstName lastName',
+    model: 'User',
+  }).select('-__v ');
+
+  sendWithoutToken(res, myPosts, 200);
+});
+
+exports.getBookmarks = catchAsync(async (req, res) => {
+  const features = new ApiFeatures(Post.find({ bookmarks: req.user.id }), req.query)
+    .tag()
+    .top()
+    .sort()
+    .paginate();
+
+  const myPosts = await features.query.populate({
+    path: 'user',
+    select: '_id photo firstName lastName',
+    model: 'User',
+  }).select('-__v ');
+
+  sendWithoutToken(res, myPosts, 200);
+});
+
+exports.addBookmark = catchAsync(async (req, res) => {
+  const post = await Post.findByIdAndUpdate(
+    req.body.postId,
+    { $addToSet: { bookmarks: req.user.id } },
+    { new: true }
+  ).populate({
+    path: 'user',
+    select: '_id photo firstName lastName',
+    model: 'User',
+  });
+  
+  sendWithoutToken(res, post, 200);
+});
+
 exports.onePost = catchAsync(async (req, res, next) => {
   const post = await Post.find({ _id: req.body.postId }).populate({
     path: 'user',
@@ -207,6 +253,20 @@ exports.delete = catchAsync(async (req, res) => {
   post = await Post.findByIdAndDelete(req.body.postId);
 
   sendWithoutToken(res, post, 204);
+});
+
+exports.removeBookmark = catchAsync(async (req, res) => {
+  const post = await Post.findByIdAndUpdate(
+    req.body.postId,
+    { $pull: { bookmarks: req.user.id } },
+    { new: true }
+  ).populate({
+    path: 'user',
+    select: '_id photo firstName lastName',
+    model: 'User',
+  });
+  
+  sendWithoutToken(res, post, 200);
 });
 
 exports.upvote = catchAsync(async (req, res) => {

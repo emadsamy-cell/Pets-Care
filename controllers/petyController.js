@@ -216,7 +216,7 @@ const updatePetyTimeTable = async (pety) => {
   if (lastUpdated === today.format('DD-MM-YYYY')) {
     return pety;
   }
-
+  
   // otherwise update Availability Formatt
   for (
     let date = moment.tz(today, timeZone);
@@ -255,8 +255,8 @@ const updatePetyTimeTable = async (pety) => {
           appointmentDateTime: currentMoment.toDate(),
         });
         if (
-          isAppointmentUnavailable.length ||
-          currentMoment.toDate() < timeNow.toDate()
+          (isAppointmentUnavailable.length && isAppointmentUnavailable[0].status != "rejected")
+          || currentMoment.toDate() < timeNow.toDate()
         )
           appointment['isAvailable'] = false;
         else appointment['isAvailable'] = true;

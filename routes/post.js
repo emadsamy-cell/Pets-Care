@@ -11,10 +11,21 @@ router.route('/')
 router.route('/pages')
   .get(postController.pages);
 
+router.use(authController.protect);
+
+router
+  .route('/myPosts')
+  .get(postController.myPosts);
+
+router
+  .route('/bookmarks')
+  .get(postController.getBookmarks)
+  .post(postController.addBookmark)
+  .delete(postController.removeBookmark);
+
 router
   .route('/create')
   .post(
-    authController.protect,
     postController.uploadPostPhoto,
     postController.create,
   );
@@ -22,7 +33,6 @@ router
 router
   .route('/update')
   .patch(
-    authController.protect,
     postController.uploadPostPhoto,
     postController.auth,
     postController.update,
@@ -31,7 +41,6 @@ router
 router
   .route('/delete')
   .delete(
-    authController.protect,
     postController.auth,
     postController.delete,
   );
@@ -39,21 +48,18 @@ router
 router
   .route('/upvote')
   .patch(
-    authController.protect,
     postController.upvote
   );
 
 router
   .route('/downvote')
   .patch(
-    authController.protect,
     postController.downvote
   );
 
 router
   .route('/resetvote')
   .patch(
-    authController.protect,
     postController.resetvote
   );
 

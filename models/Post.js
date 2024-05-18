@@ -34,7 +34,8 @@ const Post = new PostSchema(
     },
     upvotes: [ String ],
     downvotes: [ String ],
-    tags: [ String ]
+    tags: [ String ],
+    bookmarks: [ String ]
   },
   {
     // options

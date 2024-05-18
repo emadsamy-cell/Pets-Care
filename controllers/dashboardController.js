@@ -110,6 +110,16 @@ exports.allAppointments = catchAsync(async (req, res) => {
 });
 
 exports.changeAppointment = catchAsync(async (req, res) => {
+  if (req.body.status === "rejected") {
+    const pet = await Pety.findOneAndUpdate(
+      { userId: req.user.id, role: req.body.role },
+      {
+        $set: { lastUpdated: '00-00-0000' },
+      },
+      { new: true },
+    );
+  }
+
   const appointmentID = req.body.id;
   const newStatus = req.body.status;
   const result = await Appointment.findOneAndUpdate(
