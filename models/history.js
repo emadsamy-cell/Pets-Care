@@ -28,18 +28,15 @@ const History = new historySchema({
         type: String,
         required: [true, 'Please provide the name of the diagnosis.'],
       },
-      symptoms: [
-        {
-          type: String,
-          required: [true, 'Please provide the Symptoms.'],
-        },
-      ],
-      medicineName: [
-        {
-          type: String,
-          required: [true, 'Please provide the name of the medicine.'],
-        },
-      ],
+      symptoms: {
+        type: String,
+        required: [true, 'Please provide the Symptoms.'],
+      },
+
+      medicineName: {
+        type: String,
+        required: [true, 'Please provide the name of the medicine.'],
+      },
     },
   ],
 });

@@ -39,7 +39,7 @@ exports.createHistory = catchAsync(async (req, res, next) => {
 exports.getHistoryForUser = catchAsync(async (req, res, next) => {
   let history = await History.find({ userId: req.params.userId }).populate({
     path: 'userId',
-    select: 'firstName photo',
+    select: 'firstName lastName photo',
   });
   res.status(200).json({
     status: 'success',
@@ -53,7 +53,22 @@ exports.getHistoryForUser = catchAsync(async (req, res, next) => {
 exports.getHistoryForAppoinment = catchAsync(async (req, res, next) => {
   let history = await History.find({
     appoinmentId: req.params.appoinmentId,
-  }).populate({ path: 'userId', select: 'firstName photo' });
+  }).populate({ path: 'userId', select: 'firstName lastName photo' });
+
+  res.status(200).json({
+    status: 'success',
+    results: history.length,
+    data: {
+      history,
+    },
+  });
+});
+
+exports.getHistoryForAuthenticatedUser = catchAsync(async (req, res, next) => {
+  let history = await History.find({ userId: req.user.id }).populate({
+    path: 'petyId',
+    select: 'petyName role photo',
+  });
 
   res.status(200).json({
     status: 'success',
