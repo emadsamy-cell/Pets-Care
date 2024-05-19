@@ -41,7 +41,7 @@ exports.createHistory = catchAsync(async (req, res, next) => {
 exports.getHistoryForUser = catchAsync(async (req, res, next) => {
   let Appoinment = await Appointment.find({
     owner: req.params.userId,
-  }).select('_id hasHistory animals appointmentDateTime status ');
+  }).select('_id hasHistory animals appointmentDateTime status');
 
   let temp = await Appointment.find({
     owner: req.params.userId,
@@ -82,7 +82,6 @@ exports.getHistoryForAuthenticatedUser = catchAsync(async (req, res, next) => {
     path: 'petyId',
     select: 'petyName role photo',
   });
-
   res.status(200).json({
     status: 'success',
     results: history.length,

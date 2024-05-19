@@ -12,7 +12,7 @@ const History = new historySchema({
   },
   appoinmentId: {
     type: mongoose.Schema.ObjectId,
-    ref: 'appoinment',
+    ref: 'appointment',
   },
   animals: [
     {
