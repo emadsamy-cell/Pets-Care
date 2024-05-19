@@ -1,6 +1,8 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const History = require('../models/history');
+const Appointment = require('../models/appointment');
+
 const { resourceLimits } = require('worker_threads');
 
 class ApiFeatures {
@@ -37,15 +39,21 @@ exports.createHistory = catchAsync(async (req, res, next) => {
 });
 
 exports.getHistoryForUser = catchAsync(async (req, res, next) => {
-  let history = await History.find({ userId: req.params.userId }).populate({
-    path: 'userId',
-    select: 'firstName lastName photo',
-  });
+  let Appoinment = await Appointment.find({
+    owner: req.params.userId,
+  }).select('_id hasHistory animals appointmentDateTime status ');
+
+  let temp = await Appointment.find({
+    owner: req.params.userId,
+  })
+    .select('owner')
+    .populate('owner', 'firstName lastName photo');
   res.status(200).json({
     status: 'success',
-    results: history.length,
+    numofVistits: Appoinment.length,
+    user: temp[0],
     data: {
-      history,
+      Appoinment,
     },
   });
 });
@@ -53,11 +61,16 @@ exports.getHistoryForUser = catchAsync(async (req, res, next) => {
 exports.getHistoryForAppoinment = catchAsync(async (req, res, next) => {
   let history = await History.find({
     appoinmentId: req.params.appoinmentId,
-  }).populate({ path: 'userId', select: 'firstName lastName photo' });
+  }).select('-userId -petyId -appoinmentId');
+  let temp = await History.find({
+    appoinmentId: req.params.appoinmentId,
+  })
+    .select('userId')
+    .populate('userId', 'firstName lastName photo');
 
   res.status(200).json({
     status: 'success',
-    results: history.length,
+    user: temp[0],
     data: {
       history,
     },
