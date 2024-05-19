@@ -21,6 +21,18 @@ class ApiFeatures {
     return this;
   }
 
+  name() {
+    if (this.queryString.name) {
+      const reg = new RegExp(this.queryString.name, 'i');
+      this.query = this.query.find({ $or: [ 
+        { title: reg }, 
+        { context: reg }
+       ] 
+      });
+    }
+
+    return this;
+  }
 
   top() {
     // get all posts created from current time to top time
@@ -70,6 +82,7 @@ exports.allPosts = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(Post.find(), req.query)
     .tag()
     .top()
+    .name()
     .sort()
     .paginate();
 
@@ -85,6 +98,7 @@ exports.allPosts = catchAsync(async (req, res, next) => {
 exports.pages = catchAsync(async (req, res) => {
   const features = new ApiFeatures(Post.find(), req.query)
     .tag()
+    .name()
     .top();
 
   const cnt = await features.query.select('-__v -userId');
@@ -98,6 +112,7 @@ exports.myPosts = catchAsync(async (req, res) => {
   const features = new ApiFeatures(Post.find({ user: req.user.id }), req.query)
     .tag()
     .top()
+    .name()
     .sort()
     .paginate();
 
@@ -114,6 +129,7 @@ exports.getBookmarks = catchAsync(async (req, res) => {
   const features = new ApiFeatures(Post.find({ bookmarks: req.user.id }), req.query)
     .tag()
     .top()
+    .name()
     .sort()
     .paginate();
 
