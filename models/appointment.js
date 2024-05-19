@@ -16,23 +16,27 @@ const Appointment = new appointmentSchema({
   animals: [
     {
       pet: { type: String },
-      count: { type: Number }
-    }
+      count: { type: Number },
+    },
   ],
   appointmentDateTime: {
     type: Date,
     //required: [true, 'Please provide the date and time for the appointment.'],
   },
   date: {
-    type: String
+    type: String,
   },
-  time : {
-    type: String
+  time: {
+    type: String,
   },
   status: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
+  },
+  hasHistory: {
+    type: Boolean,
+    default: false,
   },
 });
 
