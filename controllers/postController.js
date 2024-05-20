@@ -177,35 +177,29 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.create = catchAsync(async (req, res) => {
-  const tags = req.body.tags.split(',');
-  let newPost;
+  let newPost = {
+    user: req.user.id,
+    title: req.body.title,
+    context: req.body.context,
+  };
+
   if (req.file) {
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: 'users',
     });
 
-    const photo = {
+    newPost.photo = {
       url: result.secure_url,
       public_id: result.public_id,
     };
-
-    newPost = await Post.create({
-      user: req.user.id,
-      title: req.body.title,
-      context: req.body.context,
-      photo: photo,
-      tags: tags
-    });
-
-  } else {
-    newPost = await Post.create({
-      user: req.user.id,
-      title: req.body.title,
-      context: req.body.context,
-      tags: tags
-    });
   }
 
+  if (req.body.tags) {
+    const tags = req.body.tags.split(',');
+    newPost.tags = tags;
+  }
+
+  newPost = await Post.create(newPost);
   const post = await Post.find({ _id: newPost._id }).populate({
     path: 'user',
     select: '_id photo firstName lastName',
