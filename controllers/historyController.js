@@ -2,7 +2,7 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const History = require('../models/history');
 const Appointment = require('../models/appointment');
-
+const Pety = require('../models/Pety');
 const { resourceLimits } = require('worker_threads');
 
 class ApiFeatures {
@@ -28,65 +28,70 @@ class ApiFeatures {
   }
 }
 
-exports.createHistory = catchAsync(async (req, res, next) => {
-  const history = await History.create(req.body);
-  res.status(201).json({
+const sendWithoutToken = (res, data, statusCode) => {
+  res.status(statusCode).json({
     status: 'success',
-    data: {
-      history,
-    },
+    results: data.length,
+    data,
   });
+};
+
+exports.addHistory = catchAsync(async (req, res, next) => {
+  const appointment = await Appointment.findOneAndUpdate(
+    { _id: req.body.appointmentId },
+    { $push: { history: req.body.history } },
+    { new: true }
+  );
+  sendWithoutToken(res, appointment, 200);
 });
 
 exports.getHistoryForUser = catchAsync(async (req, res, next) => {
-  let Appoinment = await Appointment.find({
+  const pety = await Pety.find({
+    userId: req.user.id
+  });
+
+  let appointments = await Appointment.find({
     owner: req.params.userId,
-  }).select('_id hasHistory animals appointmentDateTime status');
+    petyID: pety.id,
+    status: 'approved'
+  }).select('_id hasHistory animals date time status');
 
   let temp = await Appointment.find({
     owner: req.params.userId,
-  })
-    .select('owner')
+    petyID: pety.id,
+    status: 'approved'
+  }).select('owner')
     .populate('owner', 'firstName lastName photo');
+
   res.status(200).json({
     status: 'success',
-    numofVistits: Appoinment.length,
+    numOfVistits: appointments.length,
     user: temp[0],
     data: {
-      Appoinment,
+      appointments,
     },
   });
 });
 
 exports.getHistoryForAppoinment = catchAsync(async (req, res, next) => {
-  let history = await History.find({
-    appoinmentId: req.params.appoinmentId,
-  }).select('-userId -petyId -appoinmentId');
-  let temp = await History.find({
-    appoinmentId: req.params.appoinmentId,
-  })
-    .select('userId')
-    .populate('userId', 'firstName lastName photo');
+  let appointment = await Appointment.findOne(
+    { _id: req.params.appoinmentId }
+  ).populate('owner', 'firstName lastName photo')
+  .select('-numberOfVisits');
 
   res.status(200).json({
     status: 'success',
-    user: temp[0],
-    data: {
-      history,
-    },
+    user: appointment.owner,
+    data: appointment.history,
   });
 });
 
 exports.getHistoryForAuthenticatedUser = catchAsync(async (req, res, next) => {
-  let history = await History.find({ userId: req.user.id }).populate({
-    path: 'petyId',
+  let appointments = await Appointment.find(
+    { owner: req.user.id }
+  ).populate({
+    path: 'petyID',
     select: 'petyName role photo',
   });
-  res.status(200).json({
-    status: 'success',
-    results: history.length,
-    data: {
-      history,
-    },
-  });
+  sendWithoutToken(res, appointments, 200);
 });

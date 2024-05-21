@@ -106,6 +106,14 @@ exports.allAppointments = catchAsync(async (req, res) => {
       },
     },
   ]);
+
+  for (let appointment of appointments) {
+    appointment.numberOfVisits = await Appointment.countDocuments({
+      owner: appointment.owner,
+      petyID: appointment.petyID,
+      status: 'approved'
+    });
+  }
   sendWithoutToken(res, appointments, 200);
 });
 
@@ -126,7 +134,7 @@ exports.changeAppointment = catchAsync(async (req, res) => {
     { _id: appointmentID },
     { $set: { status: newStatus } },
     { new: true },
-  );
+  ).select('-numberOfVisits');
   result.message = req.body.message || 'wait for your visit';
   req.result = result;
   await notificationController.satusUpdate(req, res);

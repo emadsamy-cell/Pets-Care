@@ -7,7 +7,7 @@ const historyController = require('../controllers/historyController');
 router.use(authController.protect);
 router
   .route('/')
-  .post(historyController.createHistory)
+  .post(historyController.addHistory)
   .get(historyController.getHistoryForAuthenticatedUser);
 router.route('/user/:userId').get(historyController.getHistoryForUser);
 router
