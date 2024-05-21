@@ -39,25 +39,26 @@ const sendWithoutToken = (res, data, statusCode) => {
 exports.addHistory = catchAsync(async (req, res, next) => {
   const appointment = await Appointment.findOneAndUpdate(
     { _id: req.body.appointmentId },
-    { $push: { history: req.body.history } },
+    { $push: { history: req.body.history }, hasHistory: true },
     { new: true }
   );
   sendWithoutToken(res, appointment, 200);
 });
 
 exports.getHistoryForUser = catchAsync(async (req, res, next) => {
-  const pety = await Pety.find({
-    userId: req.user.id
+  const pety = await Pety.findOne({
+    userId: req.user.id,
+    role: req.body.role
   });
 
   let appointments = await Appointment.find({
-    owner: req.params.userId,
+    owner: req.body.owner,
     petyID: pety.id,
     status: 'approved'
   }).select('_id hasHistory animals date time status');
 
   let temp = await Appointment.find({
-    owner: req.params.userId,
+    owner: req.body.owner,
     petyID: pety.id,
     status: 'approved'
   }).select('owner')
