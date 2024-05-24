@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const moment = require('moment-timezone');
+const timeZone = 'Africa/Cairo';
 const PostSchema = mongoose.Schema;
 const Post = new PostSchema(
   {
@@ -26,7 +28,7 @@ const Post = new PostSchema(
     },
     createdAt: {
         type: Date,
-        default: Date.now(),
+        default: moment.tz(timeZone),
     },
     votes: {
         type: Number,
