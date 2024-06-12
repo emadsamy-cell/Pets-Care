@@ -28,7 +28,7 @@ const Post = new PostSchema(
     },
     createdAt: {
         type: Date,
-        default: moment.tz(timeZone),
+        default: () => moment().tz(timeZone).toDate(),
     },
     votes: {
         type: Number,

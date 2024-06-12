@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Pety = require('./Pety');
+const moment = require('moment-timezone');
+const timeZone = 'Africa/Cairo';
 const ReviewSchema = mongoose.Schema;
 const Review = new ReviewSchema(
   {
@@ -14,7 +16,7 @@ const Review = new ReviewSchema(
     },
     createdAt: {
       type: Date,
-      default: Date.now(),
+      default: () => moment().tz(timeZone).toDate(),
     },
     user: {
       type: mongoose.Schema.ObjectId,
