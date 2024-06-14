@@ -212,10 +212,42 @@ const updatePetyTimeTable = async (pety) => {
   const nextWeek = moment.tz(timeZone).add(7, 'days');
 
   const lastUpdated = pety.lastUpdated;
-  // check if last time this pety updated was today don't update
+  // check if last time this pety updated was today update only today appointments
+  /*
+  {
+    "availabilityFormatted" : {
+      "date" : "12/06/2024",
+      "appointments" : [
+        {
+          "time" : "12:00 AM",
+          "isAvailable" : "true"
+        }
+      ]
+    }
+  }
+  */
   if (lastUpdated === today.format('DD-MM-YYYY')) {
+    let day = pety.availabilityFormatted.find(
+      el => el.date === today.format('DD-MM-YYYY')
+    );
+    if (day) {
+      const date = day.date;
+      day.appointments.forEach(appointment => {
+        const sessionMoment = moment.tz(
+          `${date} ${appointment.time}`,
+          'DD-MM-YYYY HH:mm A',
+          timeZone,
+        );
+        if (sessionMoment.toDate() < timeNow.toDate()) {
+          // make it unavailabe
+          appointment.isAvailable = false;
+        }
+      })
+      await pety.save();
+    }
     return pety;
   }
+
   
   // otherwise update Availability Formatt
   for (

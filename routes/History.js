@@ -9,7 +9,7 @@ router
   .route('/')
   .post(historyController.addHistory)
   .get(historyController.getHistoryForAuthenticatedUser);
-router.route('/user/:userId').get(historyController.getHistoryForUser);
+router.route('/user').post(historyController.getHistoryForUser);
 router
   .route('/appoinment/:appoinmentId')
   .get(historyController.getHistoryForAppoinment);
