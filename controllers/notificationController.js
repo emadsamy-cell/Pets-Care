@@ -118,7 +118,7 @@ exports.getNotificationForOneUser = catchAsync(async (req, res, next) => {
   }
 
   if (notification.length <= 0) {
-    return next(new AppError("User doesn't have any notification yet", 404));
+    return next(new AppError("User doesn't have any notification yet", 403));
   }
 
   res.status(200).json({
