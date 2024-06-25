@@ -54,8 +54,8 @@ class ApiFeatures {
   }
 
   sort() {
-    // sort by top votes
-    this.query = this.query.sort('-votes');
+    // sort by top votes and time created
+    this.query = this.query.sort('-votes createdAt');
 
     return this;
   }
@@ -281,11 +281,13 @@ exports.removeBookmark = catchAsync(async (req, res) => {
 
 exports.upvote = catchAsync(async (req, res) => {
   const isUpvoted = await Post.find({
+    id: req.body.postId,
     upvotes: req.user.id 
   })
 
   if (!isUpvoted.length) {
     const isDownvoted = await Post.find({
+      id: req.body.postId,
       downvotes: req.user.id
     });
 
@@ -321,11 +323,13 @@ exports.upvote = catchAsync(async (req, res) => {
 
 exports.downvote = catchAsync(async (req, res) => {
   const isDownvoted = await Post.find({
+    id: req.body.postId,
     downvotes: req.user.id
   });
 
   if (!isDownvoted.length) {
     const isUpvoted = await Post.find({
+      id: req.body.postId,
       upvotes: req.user.id 
     })
 
@@ -361,6 +365,7 @@ exports.downvote = catchAsync(async (req, res) => {
 
 exports.resetvote = catchAsync(async (req, res) => {
   const isDownvoted = await Post.find({
+    id: req.body.postId,
     downvotes: req.user.id
   });
   if (isDownvoted.length) {
@@ -375,6 +380,7 @@ exports.resetvote = catchAsync(async (req, res) => {
   }
 
   const isUpvoted = await Post.find({
+    id: req.body.postId,
     upvotes: req.user.id 
   });
   if (isUpvoted.length) {
