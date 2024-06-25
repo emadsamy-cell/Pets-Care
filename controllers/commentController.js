@@ -12,7 +12,7 @@ const sendWithoutToken = (res, data, statusCode) => {
 exports.allComments = catchAsync(async (req, res) => {
   const comments = await Comment.find({
     postId: req.body.postId
-  }).populate({
+  }).sort('-votes createdAt').populate({
     path: 'user',
     select: '_id photo firstName lastName',
     model: 'User',
