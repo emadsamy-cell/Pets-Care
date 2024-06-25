@@ -87,13 +87,13 @@ exports.delete = catchAsync(async (req, res) => {
 
 exports.upvote = catchAsync(async (req, res) => {
   const isUpvoted = await Comment.find({
-    id: req.body.commentId,
+    _id: req.body.commentId,
     upvotes: req.user.id 
   });
 
   if (!isUpvoted.length) {
     const isDownvoted = await Comment.find({
-      id: req.body.commentId,
+      _id: req.body.commentId,
       downvotes: req.user.id
     });
 
@@ -129,13 +129,13 @@ exports.upvote = catchAsync(async (req, res) => {
 
 exports.downvote = catchAsync(async (req, res) => {
   const isDownvoted = await Comment.find({
-    id: req.body.commentId,
+    _id: req.body.commentId,
     downvotes: req.user.id
   });
 
   if (!isDownvoted.length) {
     const isUpvoted = await Comment.find({
-      id: req.body.commentId,
+      _id: req.body.commentId,
       upvotes: req.user.id 
     })
 
@@ -171,7 +171,7 @@ exports.downvote = catchAsync(async (req, res) => {
 
 exports.resetvote = catchAsync(async (req, res) => {
   const isDownvoted = await Comment.find({
-    id: req.body.commentId,
+    _id: req.body.commentId,
     downvotes: req.user.id
   });
   if (isDownvoted.length) {
@@ -186,7 +186,7 @@ exports.resetvote = catchAsync(async (req, res) => {
   }
 
   const isUpvoted = await Comment.find({
-    id: req.body.commentId,
+    _id: req.body.commentId,
     upvotes: req.user.id 
   });
   if (isUpvoted.length) {

@@ -177,6 +177,7 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.create = catchAsync(async (req, res) => {
+  //await Post.deleteMany();
   let newPost = {
     user: req.user.id,
     title: req.body.title,
@@ -281,13 +282,13 @@ exports.removeBookmark = catchAsync(async (req, res) => {
 
 exports.upvote = catchAsync(async (req, res) => {
   const isUpvoted = await Post.find({
-    id: req.body.postId,
+    _id: req.body.postId,
     upvotes: req.user.id 
   })
 
   if (!isUpvoted.length) {
     const isDownvoted = await Post.find({
-      id: req.body.postId,
+      _id: req.body.postId,
       downvotes: req.user.id
     });
 
@@ -323,13 +324,14 @@ exports.upvote = catchAsync(async (req, res) => {
 
 exports.downvote = catchAsync(async (req, res) => {
   const isDownvoted = await Post.find({
-    id: req.body.postId,
+    _id: req.body.postId,
     downvotes: req.user.id
   });
 
+  console.log(isDownvoted);
   if (!isDownvoted.length) {
     const isUpvoted = await Post.find({
-      id: req.body.postId,
+      _id: req.body.postId,
       upvotes: req.user.id 
     })
 
@@ -365,9 +367,10 @@ exports.downvote = catchAsync(async (req, res) => {
 
 exports.resetvote = catchAsync(async (req, res) => {
   const isDownvoted = await Post.find({
-    id: req.body.postId,
+    _id: req.body.postId,
     downvotes: req.user.id
   });
+  console.log(isDownvoted);
   if (isDownvoted.length) {
     await Post.findByIdAndUpdate(
       req.body.postId,
@@ -380,9 +383,10 @@ exports.resetvote = catchAsync(async (req, res) => {
   }
 
   const isUpvoted = await Post.find({
-    id: req.body.postId,
+    _id: req.body.postId,
     upvotes: req.user.id 
   });
+  console.log(isUpvoted);
   if (isUpvoted.length) {
     await Post.findByIdAndUpdate(
       req.body.postId,
